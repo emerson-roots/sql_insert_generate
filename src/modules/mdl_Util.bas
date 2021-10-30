@@ -1,7 +1,61 @@
 Attribute VB_Name = "mdl_Util"
 Option Explicit
 
+Sub textBoxSomenteNumerosOptionalMoeda(ByVal pKeyAscii As MSForms.ReturnInteger, Optional pMoeda As Boolean = False)
 
+    Dim strValid As String
+    
+    If pMoeda Then
+        'moeda permite virgula para casas decimais de centavos
+        strValid = "0123456789,"
+    Else
+        strValid = "0123456789"
+    End If
+    
+    If InStr(strValid, Chr(pKeyAscii)) = 0 Then
+        pKeyAscii = 0
+    End If
+
+End Sub
+Public Function validaTextBoxes(nomeTextbox As MSForms.textBox, Optional pOptionalCampoNumerico As Boolean = False, Optional pQtdMinimaCaracteres As Integer = 0, Optional pValorMinimo As Double = -1) As Boolean
+
+    validaTextBoxes = True
+
+    '************************************************************************************************************
+    'pinta bordas em vermelho em campos em branco
+    If nomeTextbox = "" Then
+        validaTextBoxes = False
+        nomeTextbox.BorderStyle = fmBorderStyleSingle ' borda
+        nomeTextbox.BorderColor = &HFF&          ' Vermelho
+        nomeTextbox.SetFocus
+        MsgBox "CAMPO OBRIGATÓRIO EM BRANCO.", vbCritical, "C a m p o   e m    B r a n c o !"
+        Exit Function
+    ElseIf pOptionalCampoNumerico And nomeTextbox <= 0 Then
+        validaTextBoxes = False
+        nomeTextbox.BorderStyle = fmBorderStyleSingle ' borda
+        nomeTextbox.BorderColor = &HFF&          ' Vermelho
+        nomeTextbox.SetFocus
+        MsgBox "CAMPO NUMÉRICO OU MONETÁRIO. VALOR INVÁLIDO", vbCritical, "V A L O R   I N V Á L I D O !"
+        Exit Function
+    ElseIf pOptionalCampoNumerico And nomeTextbox < pValorMinimo Then
+        validaTextBoxes = False
+        nomeTextbox.BorderStyle = fmBorderStyleSingle ' borda
+        nomeTextbox.BorderColor = &HFF&          ' Vermelho
+        nomeTextbox.SetFocus
+        MsgBox "VALOR MINIMO PARA O CAMPO ABAIXO DO ACEITÁVEL. O VALOR DEVE SER IGUAL OU MAIOR QUE " & pValorMinimo & ".", vbCritical, "V A L O R   I N V Á L I D O !"
+        Exit Function
+    ElseIf Len(nomeTextbox) < pQtdMinimaCaracteres Then
+        validaTextBoxes = False
+        nomeTextbox.BorderStyle = fmBorderStyleSingle ' borda
+        nomeTextbox.BorderColor = &HFF&          ' Vermelho
+        nomeTextbox.SetFocus
+        MsgBox "QUANTIDADE MINIMA DE CARACTERES/DIGITOS INVÁLIDO. O CAMPO DEVE CONTER NO MÍNIMO " & pQtdMinimaCaracteres & " CARACTERES.", vbCritical, "QUANTIDADE MINIMA DE CARACTERES INVÁLIDO!"
+        Exit Function
+    Else: nomeTextbox.SpecialEffect = fmSpecialEffectSunken ' Normal
+    End If
+
+
+End Function
 '
 '
 '

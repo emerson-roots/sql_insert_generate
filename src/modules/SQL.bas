@@ -1,6 +1,6 @@
 Attribute VB_Name = "SQL"
 Option Explicit
-Sub gerarComandosInsertsSQL()
+Sub gerarComandosInsertsSQL(pNomeTabela As String, pQtdInsertsSQL As Integer)
 
     Dim arrLocal() As Variant
     Dim SQL As String
@@ -8,7 +8,7 @@ Sub gerarComandosInsertsSQL()
     Dim dado As String
     Dim i As Integer
     Dim z As Integer
-    Dim qtdInserts As Integer
+    'Dim qtdInserts As Integer
     Dim tipoVariavel As String
     Dim rangeMinimo As Variant
     Dim rangeMaximo As Variant
@@ -24,14 +24,14 @@ Sub gerarComandosInsertsSQL()
     'captura estrutura de colunas da tabela
     arrLocal = mdl_Util.arrayComDadosDeTabela(wsTabela)
 
-    qtdInserts = 10000
+    'pQtdInsertsSQL = 10000
     qtdLinhas = UBound(arrLocal, 2)
 
     'seta quantidade de inserts para enviar ao arquivo/script
-    ReDim arrComandosSql(qtdInserts - 1)
+    ReDim arrComandosSql(pQtdInsertsSQL - 1)
 
 
-    For i = 1 To qtdInserts
+    For i = 1 To pQtdInsertsSQL
     
         For z = 0 To qtdLinhas
             On Error GoTo errorHandler
@@ -57,7 +57,7 @@ errorHandler:
         
         Next z
         
-        SQL = "INSERT INTO tbTabela(" & colunaTabela & ") VALUES (" & values & ");"
+        SQL = "INSERT INTO " & pNomeTabela & "(" & colunaTabela & ") VALUES (" & values & ");"
         
         ' adiciona comando insert no array
         arrComandosSql(i - 1) = SQL
